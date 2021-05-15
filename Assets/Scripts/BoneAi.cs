@@ -2,26 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoneAi : MonoBehaviour
+public class BoneAi: MonoBehaviour
 {
+   public ElementType element;
    public Vector3 posInCamera;
    public bool SkeletonFacingRight;
    public bool SkeletonOwner;
+   public int CollisionCount;
 
    private void OnEnable() {
-      StartCoroutine(CheckIfOffScreen());
       SkeletonOwner = true;
+      CollisionCount = 0;
+      GetComponent<SpriteRenderer>().color = GameManager.GM.ElementColors[(int)element];
    }
-   IEnumerator CheckIfOffScreen()
-   {
-      while (true)
-      {
-         yield return new WaitForSeconds(0.1f);
-         posInCamera = Camera.main.WorldToViewportPoint(transform.position);
-         if (posInCamera.x < 0 || posInCamera.y < 0 || posInCamera.x > 1 || posInCamera.y > 1)
-         {
-            Destroy(gameObject);
-         }
+   private void OnCollisionEnter2D(Collision2D other) {
+      if(other.transform.tag == "Collisions") {
+         CollisionCount++;
+         if(CollisionCount > 10)
+            Destroy(this.gameObject);
       }
    }
 }

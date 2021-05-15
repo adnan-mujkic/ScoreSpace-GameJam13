@@ -2,20 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkeletonAi : MonoBehaviour
+public class SkeletonAi: MonoBehaviour
 {
    public GameObject BonePrefab;
    public Transform ProjectileTransform;
    public int Level;
    public int HP;
    public bool canThrow;
-
+   public bool firing;
+   public LineRenderer LR;
 
    float ThrowFrequency;
    Player player;
    bool facingRight;
-   private void OnEnable()
-   {
+   private void OnEnable() {
       player = FindObjectOfType<Player>();
       ThrowFrequency = 0.3f * Level;
       StartCoroutine(ThrowBones());
@@ -24,60 +24,58 @@ public class SkeletonAi : MonoBehaviour
    }
 
 
-   IEnumerator CheckIfInsideCamera()
-   {
-      while (true)
-      {
-         if (player.transform.position.x > transform.position.x && !facingRight)
-         {
-            Flip();
+   IEnumerator CheckIfInsideCamera() {
+      while(true) {
+         if(!firing) {
+            if(player.transform.position.x > transform.position.x && !facingRight) {
+               Flip();
+            } else if(player.transform.position.x < transform.position.x && facingRight) {
+               Flip();
+            }
          }
-         else if (player.transform.position.x < transform.position.x && facingRight)
-         {
-            Flip();
-         }
+
          yield return new WaitForSeconds(0.1f);
       }
    }
 
-   IEnumerator ThrowBones()
-   {
-      while (true)
-      {
-         if (canThrow)
-         {
-            var bone = Instantiate(BonePrefab);
-            bone.transform.position = ProjectileTransform.position;
-            bone.GetComponent<BoneAi>().SkeletonFacingRight = facingRight;
-            if (facingRight)
-            {
-               bone.GetComponent<Rigidbody2D>().velocity = new Vector2(10, 0);
-            }
-            else
-            {
-               bone.GetComponent<Rigidbody2D>().velocity = new Vector2(-10, 0);
+   IEnumerator ThrowBones() {
+      yield return new WaitForSeconds(1f);
+      LR.SetPosition(0, transform.position);
+      while(true) {
+         if(!firing) {
+            LR.gameObject.SetActive(true);
+            firing = true;
+            Vector2 CastOffset = new Vector2(facingRight ? 1 : -1, 0);
+            CastOffset.y = Random.Range(-2f, 3f);
+            while(CastOffset.y > -0.05f && CastOffset.y < 0.05f) { CastOffset.y = Random.Range(-2f, 3f); }
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, CastOffset, 100f);
+            if(hit.collider != null && hit.transform.tag == "Collisions") {
+               LR.SetPosition(1, hit.point);
+               yield return new WaitForSeconds(2f);
+               LR.gameObject.SetActive(false);
+               firing = false;
+               var bone = Instantiate(BonePrefab);
+               bone.transform.position = ProjectileTransform.transform.position;
+               Vector2 Destination = hit.point - new Vector2(bone.transform.position.x, bone.transform.position.y);
+               bone.GetComponent<Rigidbody2D>().AddForce(Destination.normalized * 600f);
             }
          }
-         yield return new WaitForSeconds(1f / ThrowFrequency);
+         yield return new WaitForSeconds(3f);
       }
    }
 
-   private void OnTriggerEnter2D(Collider2D other)
-   {
-      if (other.tag == "Enemy" && !other.GetComponent<BoneAi>().SkeletonOwner)
-      {
+   private void OnTriggerEnter2D(Collider2D other) {
+      if(other.tag == "Enemy" && !other.GetComponent<BoneAi>().SkeletonOwner) {
          HP--;
          Destroy(other.gameObject);
-         if (HP <= 0)
-         {
+         if(HP <= 0) {
             player.AddScore(10 * Level);
             Destroy(gameObject);
          }
       }
    }
 
-   private void Flip()
-   {
+   private void Flip() {
       facingRight = !facingRight;
       Vector3 scaleNew = transform.localScale;
       scaleNew.x *= -1;

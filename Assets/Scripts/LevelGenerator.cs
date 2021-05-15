@@ -10,17 +10,18 @@ public class LevelGenerator: MonoBehaviour
    public float LeftEdge, RightEdge, BottomEdge, TopEdge;
    [Header("Prefabs")]
    public EnemyAi SkeletonPrefab;
+   public BossAi BossPrefab;
    public GameObject[] GroundPrefabs;
 
    List<GameObject> Skeletons;
    List<GameObject> Grounds;
+   BossAi Boss;
 
 
    // Start is called before the first frame update
    void Start() {
       Skeletons = new List<GameObject>();
       Grounds = new List<GameObject>();
-      GenerateSkeletons();
    }
 
    public void GenerateSkeletons() {
@@ -37,10 +38,12 @@ public class LevelGenerator: MonoBehaviour
          }
          skele.transform.position = new Vector3(xPos, yPos, 0f);
          Skeletons.Add(skele.gameObject);
-         var ground = Instantiate(GroundPrefabs[0]);
+         var ground = Instantiate(GroundPrefabs[(Random.value > 0.5f) ? 0 : 1]);
          ground.transform.position = skele.transform.position - new Vector3(0, 0.5f, 0);
          Grounds.Add(ground.gameObject);
       }
+      Boss = Instantiate(BossPrefab);
+      Boss.transform.position = new Vector3(Random.Range(-6f, 6f), -6f, 0f);
    }
    public bool InRangeOfAnotherSkele(float x, float y) {
       for(int i = 0; i < Skeletons.Count; i++) {
