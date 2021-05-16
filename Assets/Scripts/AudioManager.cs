@@ -18,6 +18,7 @@ public class AudioManager: MonoBehaviour
    public AudioClip LevelCompleteSound;
    public AudioClip WaveStartSound;
    public AudioClip GameOverSound;
+   public float TopMusicVolume;
 
    private void Awake() {
       if(AM == null) {
@@ -25,12 +26,26 @@ public class AudioManager: MonoBehaviour
       } else {
          Destroy(this.gameObject);
       }
+      PlayMusic();
    }
 
    public void PlayMusic() {
+      MusicSource.volume = 0f;
       System.Random ran = new System.Random();
       MusicSource.clip = MusicToPlay[ran.Next(0, MusicToPlay.Length)];
       StopAllCoroutines();
+      StartCoroutine(SmoothOutMusic());
+   }
+   private IEnumerator SmoothOutMusic() {
+      float seconds = 0f;
+      MusicSource.volume = 0f;
+      MusicSource.Play();
+      while(seconds < 2f) {
+         seconds += Time.deltaTime;
+         MusicSource.volume = Mathf.Lerp(0f, TopMusicVolume, seconds / 2f);
+         yield return new WaitForEndOfFrame();
+      }
+      MusicSource.volume = TopMusicVolume;
    }
    public void PlaySoundEffect(SfxType sfx) {
       switch(sfx) {

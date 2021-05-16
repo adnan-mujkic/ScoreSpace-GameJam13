@@ -48,6 +48,7 @@ public class Player: MonoBehaviour
          if(Shield > 0) {
             Shield--;
             Player.Instance.ShieldText.text = Shield.ToString();
+            Destroy(other.transform.parent.gameObject);
          } else {
             HP--;
             HpBar.UpdateHp(HP);
