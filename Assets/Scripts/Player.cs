@@ -43,6 +43,7 @@ public class Player: MonoBehaviour
    }
 
    private void OnTriggerEnter2D(Collider2D other) {
+      AudioManager.AM.PlaySoundEffect(SfxType.PLAYER_DAMAGE);
       if(other.transform.tag == "Enemy") {
          if(Shield > 0) {
             Shield--;

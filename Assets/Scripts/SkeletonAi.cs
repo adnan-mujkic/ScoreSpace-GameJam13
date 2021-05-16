@@ -61,6 +61,7 @@ public class SkeletonAi: MonoBehaviour
                bone.transform.position = ProjectileTransform.transform.position;
                Vector2 Destination = hit.point - new Vector2(bone.transform.position.x, bone.transform.position.y);
                bone.GetComponent<Rigidbody2D>().AddForce(Destination.normalized * 600f);
+               AudioManager.AM.PlaySoundEffect(SfxType.BONE_THROW);
             }
          }
          yield return new WaitForSeconds(ThrowFrequency);

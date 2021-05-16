@@ -62,6 +62,7 @@ public class GameManager: MonoBehaviour
       WLW.gameObject.SetActive(true);
       WLW.WaveText.text = "Wave: " + Wave.ToString();
       WLW.DisplayWave();
+      AudioManager.AM.PlaySoundEffect(SfxType.WAVE_START);
       Paused = false;
    }
    public void StartGame() {
@@ -75,6 +76,7 @@ public class GameManager: MonoBehaviour
    }
 
    public void AdvanceToNextStage() {
+      AudioManager.AM.PlaySoundEffect(SfxType.LEVEL_COMPLETE);
       FadeScreen.gameObject.SetActive(true);
       FadeScreen.color = new Color(0, 0, 0, 0);
       StartCoroutine(FadeScreenAdnimation());
@@ -102,6 +104,7 @@ public class GameManager: MonoBehaviour
    }
 
    public void GameOver() {
+      AudioManager.AM.PlaySoundEffect(SfxType.GAME_OVER);
       if(OptionsManager.SaveFile.Wave < Wave) {
          OptionsManager.SaveFile.Wave = Wave;
          OptionsManager.SaveGame();

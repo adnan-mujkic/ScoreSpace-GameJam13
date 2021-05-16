@@ -41,6 +41,7 @@ public class BossAi: MonoBehaviour
       }
    }
    public void DecreaseHp(ElementType element){
+      AudioManager.AM.PlaySoundEffect(SfxType.BOSS_DAMAGE);
       int amount = GameManager.GM.GetDamageNumberForElement(element, Type);
       GameManager.GM.Points += amount * 10;
       GameManager.GM.UpdatePointsText();

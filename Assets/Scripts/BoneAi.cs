@@ -21,12 +21,13 @@ public class BoneAi: MonoBehaviour
       GetComponent<SpriteRenderer>().color = GameManager.GM.ElementColors[(int)element];
    }
    private void OnCollisionEnter2D(Collision2D other) {
-      if(other.gameObject.GetComponentInParent<BoneAi>() != null)
+      if(other.gameObject.GetComponentInParent<BoneAi>() == null)
          return;
       if(other.transform.tag == "Collisions") {
          CollisionCount++;
-         if(CollisionCount > 10)
+         if(CollisionCount > 10) {
             Destroy(this.gameObject);
+         }
       }
    }
    private void OnTriggerEnter2D(Collider2D other) {
