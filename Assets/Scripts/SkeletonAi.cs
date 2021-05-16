@@ -18,7 +18,7 @@ public class SkeletonAi: MonoBehaviour
    bool facingRight;
    private void OnEnable() {
       player = FindObjectOfType<Player>();
-      ThrowFrequency = 0.3f * Level;
+      ThrowFrequency = Random.Range(4f, 5f) - (GameManager.GM.Wave < 30 ? (float)GameManager.GM.Wave / 10f : 3f );
       StartCoroutine(ThrowBones());
       HP = 1 * Level;
       StartCoroutine(CheckIfInsideCamera());
@@ -63,7 +63,7 @@ public class SkeletonAi: MonoBehaviour
                bone.GetComponent<Rigidbody2D>().AddForce(Destination.normalized * 600f);
             }
          }
-         yield return new WaitForSeconds(3f);
+         yield return new WaitForSeconds(ThrowFrequency);
       }
    }
 
