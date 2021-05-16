@@ -9,13 +9,15 @@ public class Player: MonoBehaviour
 {
    public static int Lives;
    public static int HP;
-   public static bool Shield;
+   public static int Shield;
    public static int ShieldHP;
+   public static Player Instance;
    public GameObject SucessScreen;
    public bool Shielding;
    CharacterControl characterControl;
 
    public HpBarWrapper HpBar;
+   public TMPro.TextMeshProUGUI ShieldText;
    public static int Score;
    public static int Keys;
    public TMPro.TextMeshProUGUI ScoreText;
@@ -23,6 +25,15 @@ public class Player: MonoBehaviour
    public Button ReplayButton;
 
 
+   private void Awake() {
+      if(Instance == null) {
+         Instance = this;
+      } else {
+         Destroy(this.gameObject);
+      }
+      ShieldHP = Shield = 1;
+      Player.Instance.ShieldText.text = Shield.ToString();
+   }
 
    private void Start() {
       characterControl = GetComponent<CharacterControl>();
@@ -33,19 +44,37 @@ public class Player: MonoBehaviour
 
    private void OnTriggerEnter2D(Collider2D other) {
       if(other.transform.tag == "Enemy") {
-         HP--;
-         HpBar.UpdateHp(HP);
-         Destroy(other.transform.parent.gameObject);
-         if(HP <= 0) {
-            Die(false);
+         if(Shield > 0) {
+            Shield--;
+            Player.Instance.ShieldText.text = Shield.ToString();
+         } else {
+            HP--;
+            HpBar.UpdateHp(HP);
+            Destroy(other.transform.parent.gameObject);
+            if(HP <= 0) {
+               Die(false);
+            }
          }
-      }else if(other.transform.tag == "Boss"){
-         HP--;
-         HpBar.UpdateHp(HP);
-         if(HP <= 0) {
-            Die(false);
+      } else if(other.transform.tag == "Boss") {
+         if(Shield > 0) {
+            Shield--;
+            Player.Instance.ShieldText.text = Shield.ToString();
+         } else {
+            HP--;
+            HpBar.UpdateHp(HP);
+            if(HP <= 0) {
+               Die(false);
+            }
          }
       }
+   }
+   public static void ShieldRefil() {
+      Shield = ShieldHP;
+      Player.Instance.ShieldText.text = Shield.ToString();
+   }
+   public static void ShieldUpgrade() {
+      ShieldHP++;
+      ShieldRefil();
    }
 
    public void Die(bool falling) {

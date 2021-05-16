@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterControl : MonoBehaviour
+public class CharacterControl: MonoBehaviour
 {
    public float speed;
    public float jumpForce;
@@ -23,8 +23,7 @@ public class CharacterControl : MonoBehaviour
    public bool Sprinting;
 
    // Start is called before the first frame update
-   void Start()
-   {
+   void Start() {
       animator = GetComponent<Animator>();
       rb2d = GetComponent<Rigidbody2D>();
       spriteRenderer = GetComponent<SpriteRenderer>();
@@ -33,63 +32,50 @@ public class CharacterControl : MonoBehaviour
       //maxJumps = 2;
    }
    // Update is called once per frame
-   void FixedUpdate()
-   {
+   void FixedUpdate() {
+      if(GameManager.GM.Paused)
+         return;
       isGrounded = Physics2D.OverlapCircle(groundCheck.position, checkRadius, whatIsGround);
       moveInput = Input.GetAxisRaw("Horizontal");
-      if (SprintEnabled && Sprinting)
-      {
+      if(SprintEnabled && Sprinting) {
          rb2d.velocity = new Vector2(moveInput * speed * 3f, rb2d.velocity.y);
-      }
-      else
-      {
+      } else {
          rb2d.velocity = new Vector2(moveInput * speed, rb2d.velocity.y);
       }
 
 
-      if (!facingRight && moveInput > 0)
-      {
+      if(!facingRight && moveInput > 0) {
          Flip();
-      }
-      else if (facingRight && moveInput < 0)
-      {
+      } else if(facingRight && moveInput < 0) {
          Flip();
       }
    }
-   void Update()
-   {
-      if (isGrounded)
-      {
+   void Update() {
+      if(GameManager.GM.Paused)
+         return;
+      if(isGrounded) {
          jumps = maxJumps;
       }
-      if(rb2d.velocity.y != 0){
+      if(rb2d.velocity.y != 0) {
          animator.SetBool("Jumping", true);
-      }
-      else{
+      } else {
          animator.SetBool("Jumping", false);
       }
-      if (Input.GetKeyDown(KeyCode.Space) && jumps > 0)
-      {
+      if(Input.GetKeyDown(KeyCode.Space) && jumps > 0) {
          rb2d.velocity = Vector2.up * jumpForce;
          jumps--;
-      }
-      else if (Input.GetKeyDown(KeyCode.Space) && jumps == 0 && isGrounded)
-      {
+      } else if(Input.GetKeyDown(KeyCode.Space) && jumps == 0 && isGrounded) {
          rb2d.velocity = Vector2.up * jumpForce;
       }
       Sprinting = Input.GetKey(KeyCode.LeftShift);
-      if (rb2d.velocity.x != 0)
-      {
+      if(rb2d.velocity.x != 0) {
          moving = true;
-      }
-      else
-      {
+      } else {
          moving = false;
       }
       animator.SetBool("Walking", moving);
    }
-   void Flip()
-   {
+   void Flip() {
       facingRight = !facingRight;
       Vector3 Scaler = transform.localScale;
       Scaler.x *= -1;

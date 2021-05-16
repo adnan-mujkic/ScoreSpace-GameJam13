@@ -28,7 +28,11 @@ public class LevelGenerator: MonoBehaviour
 
    public void PrepareWave() {
       SkeletonElement = (ElementType)Random.Range(1, 3);
-      BossElement = (ElementType)Random.Range(1, 3);
+      if(GameManager.GM.Wave == 1 || AdditionalSkeleton == -1) {
+         BossElement = GetStrongerElement(SkeletonElement);
+      } else {
+         BossElement = (ElementType)Random.Range(1, 3);
+      }
    }
 
    public void DeleteBoss() {
@@ -43,12 +47,17 @@ public class LevelGenerator: MonoBehaviour
             Destroy(item.gameObject);
          }
       }
+      foreach (var item in Grounds)
+      {
+         Destroy(item.gameObject);
+      }
+      Grounds.Clear();
       GameManager.GM.Paused = true;
    }
 
    public void GenerateSkeletons() {
       SpawnSkeleton();
-      if(AdditionalSkeleton != -1){
+      if(AdditionalSkeleton != -1) {
          SpawnSkeleton();
       }
       Boss = Instantiate(BossPrefab);
@@ -66,13 +75,16 @@ public class LevelGenerator: MonoBehaviour
          }
       }
       skele.transform.position = new Vector3(xPos, yPos, 0f);
-      skele.gameObject.GetComponentInChildren<SkeletonAi>().ChangeElement(SkeletonElement);
+      if(Skeletons.Count == 0)
+         skele.gameObject.GetComponentInChildren<SkeletonAi>().ChangeElement(SkeletonElement);
+      else
+         skele.gameObject.GetComponentInChildren<SkeletonAi>().ChangeElement((ElementType)AdditionalSkeleton);
       Skeletons.Add(skele.gameObject);
       var ground = Instantiate(GroundPrefabs[(Random.value > 0.5f) ? 0 : 1]);
       ground.transform.position = skele.transform.position - new Vector3(0, 0.5f, 0);
       Grounds.Add(ground.gameObject);
    }
-   public ElementType GetOppositeElement(ElementType type) {
+   public ElementType GetWeakerElement(ElementType type) {
       ElementType OppositeType;
       switch(type) {
          case ElementType.FIRE:
@@ -93,11 +105,32 @@ public class LevelGenerator: MonoBehaviour
       }
       return OppositeType;
    }
+   public ElementType GetStrongerElement(ElementType type) {
+      ElementType OppositeType;
+      switch(type) {
+         case ElementType.FIRE:
+            OppositeType = (Random.value > 0.5f) ? ElementType.ICE : ElementType.ELECTRO;
+            break;
+         case ElementType.WATER:
+            OppositeType = ElementType.FIRE;
+            break;
+         case ElementType.ICE:
+            OppositeType = (Random.value > 0.5f) ? ElementType.WATER : ElementType.ELECTRO;
+            break;
+         case ElementType.ELECTRO:
+           OppositeType = ElementType.WATER;
+            break;
+         default:
+            OppositeType = ElementType.FIRE;
+            break;
+      }
+      return OppositeType;
+   }
 
    public bool InRangeOfAnotherSkele(float x, float y) {
       for(int i = 0; i < Skeletons.Count; i++) {
-         if(Skeletons[i].transform.position.x - 0.5f < x && Skeletons[i].transform.position.x + 0.5f > x) {
-            if(Skeletons[i].transform.position.y - 0.5f < y && Skeletons[i].transform.position.y + 0.5f > y) {
+         if(Skeletons[i].transform.position.x - 1f < x && Skeletons[i].transform.position.x + 1f > x) {
+            if(Skeletons[i].transform.position.y - 1f < y && Skeletons[i].transform.position.y + 1f > y) {
                return true;
             }
          }

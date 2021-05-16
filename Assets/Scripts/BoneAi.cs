@@ -28,7 +28,7 @@ public class BoneAi: MonoBehaviour
       }
    }
    private void OnTriggerEnter2D(Collider2D other) {
-      if(other.gameObject != null && other.transform.tag == "Enemy") {
+      if(other.gameObject != null && other.transform.tag == "Enemy" && other.gameObject.GetComponent<BoneAi>() == null) {
          Debug.Log("Boss takes damage");
          Destroy(this.gameObject);
          var boss = other.gameObject.GetComponent<BossAi>();

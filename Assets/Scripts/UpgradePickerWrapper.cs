@@ -43,12 +43,13 @@ public class UpgradePickerWrapper: MonoBehaviour
    }
 
    public void RefillShield() {
-      if(Player.Shield || GameManager.GM.Points <= 200)
+      if(Player.Shield == Player.ShieldHP || GameManager.GM.Points <= 200)
          return;
       GameManager.GM.Points -= 200;
       PointsText.text = GameManager.GM.Points.ToString();
       ShieldButton.interactable = false;
       DisableInteract();
+      Player.ShieldRefil();
    }
 
    public void UpgradeShield() {
@@ -58,6 +59,7 @@ public class UpgradePickerWrapper: MonoBehaviour
       GameManager.GM.Points -= 1000;
       PointsText.text = GameManager.GM.Points.ToString();
       DisableInteract();
+      Player.ShieldUpgrade();
    }
 
    public void ReshuffleSkeletons(){
@@ -67,6 +69,7 @@ public class UpgradePickerWrapper: MonoBehaviour
       PointsText.text = GameManager.GM.Points.ToString();
       LG.PrepareWave();
       DisplaySkeletonBoss();
+      DisableInteract();
    }
 
    public void SelectSkeleton(int type) {
@@ -92,6 +95,7 @@ public class UpgradePickerWrapper: MonoBehaviour
          GameManager.GM.Points += 100;
          PointsText.text = GameManager.GM.Points.ToString();
       }
+      DisableInteract();
    }
 
    public void ApplyUpgrade() {
@@ -104,13 +108,16 @@ public class UpgradePickerWrapper: MonoBehaviour
    }
 
    public void DisableInteract() {
-      if(GameManager.GM.Points <= 100)
+      if(GameManager.GM.Points <= 1000)
          ShieldUpgradeButton.interactable = false;
-      if(GameManager.GM.Points <= 200){
-         ShieldButton.interactable = false;
+
+      if(GameManager.GM.Points <= 200 || Player.Shield == Player.ShieldHP)
+      ShieldButton.interactable = false;
+
+      if(GameManager.GM.Points <= 200)
          ShuffleButton.interactable = false;
-      }
-      if(GameManager.GM.Points <= 20)
+
+      if(GameManager.GM.Points <= 20 || Player.HP == 10)
          HpButton.interactable = false;
    }
 }
