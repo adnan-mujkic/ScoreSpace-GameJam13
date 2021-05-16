@@ -13,6 +13,7 @@ public class GameManager: MonoBehaviour
    public GameObject MainUi, MenuUi, RulesPageUi, UpgradesUi, HighScoreScreen;
    public TMPro.TextMeshProUGUI ScoreText;
    public TMPro.TextMeshProUGUI WavesText;
+   public Image FadeScreen;
    public Button PlayButton;
    LevelGenerator LG;
    WaveLoadingWrapper WLW;
@@ -64,6 +65,8 @@ public class GameManager: MonoBehaviour
       Paused = false;
    }
    public void StartGame() {
+      FadeScreen.color = new Color(0, 0, 0, 0);
+      FadeScreen.gameObject.SetActive(false);
       MainUi.SetActive(true);
       if(Wave == 1)
          LG.PrepareWave();
@@ -72,6 +75,17 @@ public class GameManager: MonoBehaviour
    }
 
    public void AdvanceToNextStage() {
+      FadeScreen.gameObject.SetActive(true);
+      FadeScreen.color = new Color(0, 0, 0, 0);
+      StartCoroutine(FadeScreenAdnimation());
+   }
+   IEnumerator FadeScreenAdnimation() {
+      float seconds = 0f;
+      while(seconds < 0.5f) {
+         FadeScreen.color = new Color(0, 0, 0, Mathf.Lerp(0f, 1f, seconds * 2f));
+         seconds += Time.deltaTime;
+         yield return new WaitForEndOfFrame();
+      }
       MainUi.SetActive(false);
       UpgradesUi.SetActive(true);
       LG.PrepareWave();
