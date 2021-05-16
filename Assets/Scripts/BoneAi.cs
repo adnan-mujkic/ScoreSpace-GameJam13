@@ -9,6 +9,7 @@ public class BoneAi: MonoBehaviour
    public bool SkeletonFacingRight;
    public bool SkeletonOwner;
    public int CollisionCount;
+   public ParticleSystem[] ElementalParticleSystems;
    BossAi Boss;
 
    private void OnEnable() {
@@ -18,6 +19,7 @@ public class BoneAi: MonoBehaviour
       Boss = FindObjectOfType<BossAi>();
    }
    public void ChangeElement() {
+      ElementalParticleSystems[(int)element].gameObject.SetActive(true);
       GetComponent<SpriteRenderer>().color = GameManager.GM.ElementColors[(int)element];
    }
    private void OnCollisionEnter2D(Collision2D other) {
