@@ -30,5 +30,6 @@ public class WaveLoadingWrapper: MonoBehaviour
          yield return new WaitForEndOfFrame();
       }
       FindObjectOfType<GameManager>().StartGame();
+      gameObject.SetActive(false);
    }
 }

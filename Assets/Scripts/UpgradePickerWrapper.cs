@@ -38,7 +38,6 @@ public class UpgradePickerWrapper: MonoBehaviour
          return;
       GameManager.GM.Points -= 20;
       PointsText.text = GameManager.GM.Points.ToString();
-      HpButton.interactable = false;
       DisableInteract();
    }
 
