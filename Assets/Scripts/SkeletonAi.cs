@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SkeletonAi: MonoBehaviour
 {
+   public ElementType Type;
    public GameObject BonePrefab;
    public Transform ProjectileTransform;
    public int Level;
@@ -49,7 +50,7 @@ public class SkeletonAi: MonoBehaviour
             CastOffset.y = Random.Range(-2f, 3f);
             while(CastOffset.y > -0.05f && CastOffset.y < 0.05f) { CastOffset.y = Random.Range(-2f, 3f); }
             RaycastHit2D hit = Physics2D.Raycast(transform.position, CastOffset, 100f);
-            if(hit.collider != null && hit.transform.tag == "Collisions") {
+            if(hit.collider != null) {
                LR.SetPosition(1, hit.point);
                yield return new WaitForSeconds(2f);
                LR.gameObject.SetActive(false);

@@ -16,6 +16,7 @@ public class LevelGenerator: MonoBehaviour
    List<GameObject> Skeletons;
    List<GameObject> Grounds;
    BossAi Boss;
+   public ElementType SkeletonElement, BossElement;
 
 
    // Start is called before the first frame update
@@ -24,7 +25,12 @@ public class LevelGenerator: MonoBehaviour
       Grounds = new List<GameObject>();
    }
 
-   public void GenerateSkeletons() {
+   public void PrepareWave(){
+      SkeletonElement = (ElementType)Random.Range(1, 3);
+      BossElement = (ElementType)Random.Range(1, 3);
+   }
+
+   public void GenerateSkeletons(bool firstRound) {
       int numberOfSkeletons = (int)difficulty;
       for(int i = 0; i < numberOfSkeletons; i++) {
          var skele = Instantiate(SkeletonPrefab);
@@ -45,6 +51,28 @@ public class LevelGenerator: MonoBehaviour
       Boss = Instantiate(BossPrefab);
       Boss.transform.position = new Vector3(Random.Range(-6f, 6f), -6f, 0f);
    }
+   public ElementType GetOppositeElement(ElementType type) {
+      ElementType OppositeType;
+      switch(type) {
+         case ElementType.FIRE:
+            OppositeType = ElementType.WATER;
+            break;
+         case ElementType.WATER:
+            OppositeType = (Random.value > 0.5f) ? ElementType.ICE : ElementType.ELECTRO;
+            break;
+         case ElementType.ICE:
+            OppositeType = ElementType.FIRE;
+            break;
+         case ElementType.ELECTRO:
+            OppositeType = (Random.value > 0.5f) ? ElementType.FIRE : ElementType.ICE;
+            break;
+         default:
+            OppositeType = ElementType.FIRE;
+            break;
+      }
+      return OppositeType;
+   }
+
    public bool InRangeOfAnotherSkele(float x, float y) {
       for(int i = 0; i < Skeletons.Count; i++) {
          if(Skeletons[i].transform.position.x - 0.5f < x && Skeletons[i].transform.position.x + 0.5f > x) {

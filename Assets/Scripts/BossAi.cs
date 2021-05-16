@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class BossAi: MonoBehaviour
 {
+   public ElementType Type;
    public Player player;
    public bool facingRight;
+   public Canvas hpCanvas;
+   public int HP;
+   public HpBarWrapper HpBar;
 
    private void OnEnable() {
       player = FindObjectOfType<Player>();
       StartCoroutine
       (PeriodicallyCheckAi());
       FacePlayer();
+      hpCanvas.worldCamera = Camera.main;
+      hpCanvas.pixelPerfect = true;
+      HP = 5;
    }
 
    private IEnumerator PeriodicallyCheckAi() {
@@ -31,6 +38,18 @@ public class BossAi: MonoBehaviour
          }
          yield return new WaitForSeconds(Random.Range(2f, 5f));
       }
+   }
+   public void DecreaseHp(ElementType element){
+      if(HP <= 0)
+         return;
+      HP--;
+      HpBar.UpdateHp(HP);
+      if(HP == 0){
+         Die();
+      }
+   }
+   public void Die(){
+      Debug.Log("Stage Complete");
    }
    private void FacePlayer() {
       if(player.transform.position.x > transform.position.x && !facingRight) {

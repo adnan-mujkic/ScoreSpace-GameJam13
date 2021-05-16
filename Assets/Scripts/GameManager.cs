@@ -24,7 +24,7 @@ public class GameManager: MonoBehaviour
    public void StartGame() {
       MainUi.SetActive(true);
       MenuUi.SetActive(false);
-      LG.GenerateSkeletons();
+      LG.GenerateSkeletons(true);
    }
 
    public void SelectUpgradeSkeleton(int type){
