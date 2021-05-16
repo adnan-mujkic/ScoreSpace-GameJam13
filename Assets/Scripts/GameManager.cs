@@ -66,6 +66,7 @@ public class GameManager: MonoBehaviour
       Paused = false;
    }
    public void StartGame() {
+      AudioManager.AM.HighVolume();
       FadeScreen.color = new Color(0, 0, 0, 0);
       FadeScreen.gameObject.SetActive(false);
       MainUi.SetActive(true);
@@ -76,6 +77,7 @@ public class GameManager: MonoBehaviour
    }
 
    public void AdvanceToNextStage() {
+      AudioManager.AM.LowerVolume();
       AudioManager.AM.PlaySoundEffect(SfxType.LEVEL_COMPLETE);
       FadeScreen.gameObject.SetActive(true);
       FadeScreen.color = new Color(0, 0, 0, 0);
