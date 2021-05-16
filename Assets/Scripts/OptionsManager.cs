@@ -3,15 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine.Events;
+using System;
 
 public class OptionsManager: MonoBehaviour
 {
+   public static event Action OnGameLoaded;
    public static OptionsSave SaveFile;
    public static string SavePath;
 
    private void Awake() {
       SaveFile = new OptionsSave();
       SavePath = Path.Combine(Application.persistentDataPath, "Save.data");
+      LoadGame();
    }
    public static void SaveGame() {
       FileStream dataStream = new FileStream(SavePath, FileMode.Create);
@@ -28,6 +32,7 @@ public class OptionsManager: MonoBehaviour
       } else {
          SaveGame();
       }
+      OnGameLoaded?.Invoke();
    }
 }
 [System.Serializable]
@@ -35,6 +40,10 @@ public class OptionsSave
 {
    public bool FirstTime;
    public int Wave;
+   public OptionsSave(){
+      FirstTime = true;
+      Wave = 0;
+   }
    public void AddWave() {
       Wave++;
    }

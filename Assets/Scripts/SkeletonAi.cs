@@ -56,6 +56,8 @@ public class SkeletonAi: MonoBehaviour
                LR.gameObject.SetActive(false);
                firing = false;
                var bone = Instantiate(BonePrefab);
+               bone.GetComponent<BoneAi>().element = Type;
+               bone.GetComponent<BoneAi>().ChangeElement();
                bone.transform.position = ProjectileTransform.transform.position;
                Vector2 Destination = hit.point - new Vector2(bone.transform.position.x, bone.transform.position.y);
                bone.GetComponent<Rigidbody2D>().AddForce(Destination.normalized * 600f);
@@ -76,6 +78,10 @@ public class SkeletonAi: MonoBehaviour
       }
    }
 
+   public void ChangeElement(ElementType type) {
+      Type = type;
+      GetComponent<SpriteRenderer>().color = GameManager.GM.ElementColors[(int)type];
+   }
    private void Flip() {
       facingRight = !facingRight;
       Vector3 scaleNew = transform.localScale;

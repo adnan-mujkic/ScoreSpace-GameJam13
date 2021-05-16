@@ -13,6 +13,7 @@ public class LevelGenerator: MonoBehaviour
    public BossAi BossPrefab;
    public GameObject[] GroundPrefabs;
 
+   public int AdditionalSkeleton;
    List<GameObject> Skeletons;
    List<GameObject> Grounds;
    BossAi Boss;
@@ -25,31 +26,51 @@ public class LevelGenerator: MonoBehaviour
       Grounds = new List<GameObject>();
    }
 
-   public void PrepareWave(){
+   public void PrepareWave() {
       SkeletonElement = (ElementType)Random.Range(1, 3);
       BossElement = (ElementType)Random.Range(1, 3);
    }
 
-   public void GenerateSkeletons(bool firstRound) {
-      int numberOfSkeletons = (int)difficulty;
-      for(int i = 0; i < numberOfSkeletons; i++) {
-         var skele = Instantiate(SkeletonPrefab);
-         float xPos = Random.Range(LeftEdge, RightEdge);
-         float yPos = Random.Range(BottomEdge, TopEdge);
-         if(i != 0) {
-            while(InRangeOfAnotherSkele(xPos, yPos)) {
-               xPos = Random.Range(LeftEdge, RightEdge);
-               yPos = Random.Range(BottomEdge, TopEdge);
-            }
+   public void DeleteBoss() {
+      foreach(var item in Skeletons) {
+         Destroy(item.gameObject);
+      }
+      Skeletons.Clear();
+      Destroy(Boss.gameObject);
+      var allBones = FindObjectsOfType<BoneAi>();
+      if(allBones != null) {
+         foreach(var item in allBones) {
+            Destroy(item.gameObject);
          }
-         skele.transform.position = new Vector3(xPos, yPos, 0f);
-         Skeletons.Add(skele.gameObject);
-         var ground = Instantiate(GroundPrefabs[(Random.value > 0.5f) ? 0 : 1]);
-         ground.transform.position = skele.transform.position - new Vector3(0, 0.5f, 0);
-         Grounds.Add(ground.gameObject);
+      }
+      GameManager.GM.Paused = true;
+   }
+
+   public void GenerateSkeletons() {
+      SpawnSkeleton();
+      if(AdditionalSkeleton != -1){
+         SpawnSkeleton();
       }
       Boss = Instantiate(BossPrefab);
       Boss.transform.position = new Vector3(Random.Range(-6f, 6f), -6f, 0f);
+      Boss.ChangeElement(BossElement);
+   }
+   public void SpawnSkeleton() {
+      var skele = Instantiate(SkeletonPrefab);
+      float xPos = Random.Range(LeftEdge, RightEdge);
+      float yPos = Random.Range(BottomEdge, TopEdge);
+      if(Skeletons.Count > 0) {
+         while(InRangeOfAnotherSkele(xPos, yPos)) {
+            xPos = Random.Range(LeftEdge, RightEdge);
+            yPos = Random.Range(BottomEdge, TopEdge);
+         }
+      }
+      skele.transform.position = new Vector3(xPos, yPos, 0f);
+      skele.gameObject.GetComponentInChildren<SkeletonAi>().ChangeElement(SkeletonElement);
+      Skeletons.Add(skele.gameObject);
+      var ground = Instantiate(GroundPrefabs[(Random.value > 0.5f) ? 0 : 1]);
+      ground.transform.position = skele.transform.position - new Vector3(0, 0.5f, 0);
+      Grounds.Add(ground.gameObject);
    }
    public ElementType GetOppositeElement(ElementType type) {
       ElementType OppositeType;

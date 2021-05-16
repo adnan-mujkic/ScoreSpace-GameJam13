@@ -166,6 +166,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f4a71a0c2da0b3488df83118864b916, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Type: 0
   player: {fileID: 0}
   facingRight: 0
   hpCanvas: {fileID: 1717364356737797552}

@@ -40,16 +40,30 @@ public class BossAi: MonoBehaviour
       }
    }
    public void DecreaseHp(ElementType element){
+      int amount = GameManager.GM.GetDamageNumberForElement(element, Type);
+      GameManager.GM.Points += amount * 10;
+      GameManager.GM.UpdatePointsText();
       if(HP <= 0)
          return;
-      HP--;
+      HP -= amount;
       HpBar.UpdateHp(HP);
-      if(HP == 0){
+      if(HP <= 0){
+         HP = 0;
+         HpBar.UpdateHp(0);
          Die();
       }
    }
    public void Die(){
       Debug.Log("Stage Complete");
+      GameManager.GM.Points += 100;
+      GameManager.GM.UpdatePointsText();
+      FindObjectOfType<LevelGenerator>().DeleteBoss();
+      GameManager.GM.AdvanceToNextStage();
+   }
+
+   public void ChangeElement(ElementType type){
+      Type = type;
+      GetComponent<SpriteRenderer>().color = GameManager.GM.ElementColors[(int)type];
    }
    private void FacePlayer() {
       if(player.transform.position.x > transform.position.x && !facingRight) {

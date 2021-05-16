@@ -9,6 +9,8 @@ public class Player: MonoBehaviour
 {
    public static int Lives;
    public static int HP;
+   public static bool Shield;
+   public static int ShieldHP;
    public GameObject SucessScreen;
    public bool Shielding;
    CharacterControl characterControl;
@@ -25,7 +27,7 @@ public class Player: MonoBehaviour
    private void Start() {
       characterControl = GetComponent<CharacterControl>();
       AddScore(0);
-      HP = 8;
+      HP = 10;
       HpBar.UpdateHp(HP);
    }
 
@@ -51,6 +53,7 @@ public class Player: MonoBehaviour
       if(falling) {
          StartCoroutine(WaitAndDisablePhysics());
       }
+      GameManager.GM.GameOver();
    }
    IEnumerator WaitAndDisablePhysics() {
       yield return new WaitForSeconds(0.5f);

@@ -14,8 +14,11 @@ public class BoneAi: MonoBehaviour
    private void OnEnable() {
       SkeletonOwner = true;
       CollisionCount = 0;
-      GetComponent<SpriteRenderer>().color = GameManager.GM.ElementColors[(int)element];
+
       Boss = FindObjectOfType<BossAi>();
+   }
+   public void ChangeElement() {
+      GetComponent<SpriteRenderer>().color = GameManager.GM.ElementColors[(int)element];
    }
    private void OnCollisionEnter2D(Collision2D other) {
       if(other.transform.tag == "Collisions") {
@@ -25,11 +28,11 @@ public class BoneAi: MonoBehaviour
       }
    }
    private void OnTriggerEnter2D(Collider2D other) {
-      if(other.gameObject != null && other.transform.tag == "Enemy"){
+      if(other.gameObject != null && other.transform.tag == "Enemy") {
          Debug.Log("Boss takes damage");
          Destroy(this.gameObject);
          var boss = other.gameObject.GetComponent<BossAi>();
-         if(boss != null){
+         if(boss != null) {
             boss.DecreaseHp(element);
          }
       }
