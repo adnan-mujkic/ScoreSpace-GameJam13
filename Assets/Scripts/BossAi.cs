@@ -36,7 +36,8 @@ public class BossAi: MonoBehaviour
             seconds += Time.deltaTime;
             yield return new WaitForEndOfFrame();
          }
-         yield return new WaitForSeconds(Random.Range(2f, 5f));
+         float waitFrequency = Random.Range(4f, 6f) - (GameManager.GM.Wave < 30 ? (float)GameManager.GM.Wave / 10f : 3f);
+         yield return new WaitForSeconds(waitFrequency);
       }
    }
    public void DecreaseHp(ElementType element){
