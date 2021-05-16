@@ -5201,7 +5201,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.1
+  m_Volume: 0.15
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -5310,6 +5310,7 @@ MonoBehaviour:
   LevelCompleteSound: {fileID: 8300000, guid: 667aa2ab78903024ba841b36f8c5f268, type: 3}
   WaveStartSound: {fileID: 8300000, guid: 4dd55c40a96e6844d857efa128827930, type: 3}
   GameOverSound: {fileID: 8300000, guid: c96be3a7a0a2cd340af21d0824ec3295, type: 3}
+  TopMusicVolume: 0.1
 --- !u!1 &519463838
 GameObject:
   m_ObjectHideFlags: 0

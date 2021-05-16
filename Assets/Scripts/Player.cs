@@ -32,7 +32,7 @@ public class Player: MonoBehaviour
          Destroy(this.gameObject);
       }
       ShieldHP = Shield = 1;
-      Player.Instance.ShieldText.text = Shield.ToString();
+      Player.Instance.ShieldText.text = "Shield: " + Shield.ToString();
    }
 
    private void Start() {
@@ -47,7 +47,7 @@ public class Player: MonoBehaviour
       if(other.transform.tag == "Enemy") {
          if(Shield > 0) {
             Shield--;
-            Player.Instance.ShieldText.text = Shield.ToString();
+            Player.Instance.ShieldText.text = "Shield: " + Shield.ToString();
             Destroy(other.transform.parent.gameObject);
          } else {
             HP--;
@@ -60,7 +60,7 @@ public class Player: MonoBehaviour
       } else if(other.transform.tag == "Boss") {
          if(Shield > 0) {
             Shield--;
-            Player.Instance.ShieldText.text = Shield.ToString();
+            Player.Instance.ShieldText.text = "Shield: " + Shield.ToString();
          } else {
             HP--;
             HpBar.UpdateHp(HP);
@@ -72,7 +72,7 @@ public class Player: MonoBehaviour
    }
    public static void ShieldRefil() {
       Shield = ShieldHP;
-      Player.Instance.ShieldText.text = Shield.ToString();
+      Player.Instance.ShieldText.text = "Shield: " + Shield.ToString();
    }
    public static void ShieldUpgrade() {
       ShieldHP++;
