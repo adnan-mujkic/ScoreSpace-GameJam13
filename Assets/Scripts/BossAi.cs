@@ -45,6 +45,7 @@ public class BossAi: MonoBehaviour
       int amount = GameManager.GM.GetDamageNumberForElement(element, Type);
       GameManager.GM.Points += amount * 10;
       GameManager.GM.UpdatePointsText();
+      ChangeElement(Type);
       StartCoroutine(FlashOnDamage(Color.red));
       if(HP <= 0)
          return;
@@ -70,7 +71,7 @@ public class BossAi: MonoBehaviour
       colorToFlash.b *= 0.7f;
       GetComponent<SpriteRenderer>().color = colorToFlash;
       yield return new WaitForSeconds(0.2f);
-      GetComponent<SpriteRenderer>().color = Color.white;
+      ChangeElement(Type);
    }
 
    public void ChangeElement(ElementType type){

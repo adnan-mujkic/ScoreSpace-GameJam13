@@ -11,6 +11,7 @@ public class OptionsManager: MonoBehaviour
    public static event Action OnGameLoaded;
    public static OptionsSave SaveFile;
    public static string SavePath;
+   public TMPro.TextMeshProUGUI HighscoreText;
 
    private void Awake() {
       SaveFile = new OptionsSave();
@@ -33,6 +34,7 @@ public class OptionsManager: MonoBehaviour
          SaveGame();
       }
       OnGameLoaded?.Invoke();
+      FindObjectOfType<OptionsManager>().HighscoreText.text = "Highest Wave: " + SaveFile.Wave.ToString();
    }
 }
 [System.Serializable]
