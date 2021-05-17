@@ -45,6 +45,7 @@ public class BossAi: MonoBehaviour
       int amount = GameManager.GM.GetDamageNumberForElement(element, Type);
       GameManager.GM.Points += amount * 10;
       GameManager.GM.UpdatePointsText();
+      StartCoroutine(FlashOnDamage(Color.red));
       if(HP <= 0)
          return;
       HP -= amount;
@@ -61,6 +62,15 @@ public class BossAi: MonoBehaviour
       GameManager.GM.UpdatePointsText();
       FindObjectOfType<LevelGenerator>().DeleteBoss();
       GameManager.GM.AdvanceToNextStage();
+   }
+
+      private IEnumerator FlashOnDamage(Color colorToFlash) {
+      colorToFlash.r *= 0.7f;
+      colorToFlash.g *= 0.7f;
+      colorToFlash.b *= 0.7f;
+      GetComponent<SpriteRenderer>().color = colorToFlash;
+      yield return new WaitForSeconds(0.2f);
+      GetComponent<SpriteRenderer>().color = Color.white;
    }
 
    public void ChangeElement(ElementType type){

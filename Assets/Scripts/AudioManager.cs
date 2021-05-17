@@ -29,6 +29,10 @@ public class AudioManager: MonoBehaviour
       PlayMusic();
    }
 
+   public void StopMusic(){
+      MusicSource.Stop();
+   }
+
    public void PlayMusic() {
       MusicSource.volume = 0f;
       System.Random ran = new System.Random();

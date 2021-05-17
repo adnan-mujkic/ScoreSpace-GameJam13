@@ -90,7 +90,7 @@ public class GameManager: MonoBehaviour
          seconds += Time.deltaTime;
          yield return new WaitForEndOfFrame();
       }
-      MainUi.SetActive(false);
+      //MainUi.SetActive(false);
       UpgradesUi.SetActive(true);
       LG.PrepareWave();
       Wave++;
@@ -107,12 +107,14 @@ public class GameManager: MonoBehaviour
 
    public void GameOver() {
       AudioManager.AM.PlaySoundEffect(SfxType.GAME_OVER);
+      AudioManager.AM.StopMusic();
       if(OptionsManager.SaveFile.Wave < Wave) {
          OptionsManager.SaveFile.Wave = Wave;
          OptionsManager.SaveGame();
       }
       HighScoreScreen.SetActive(true);
       HighscoreText.text = "Highest wave: " + OptionsManager.SaveFile.Wave.ToString();
+      LG.DeleteBoss();
    }
 
    public void PlayAgain() {

@@ -49,6 +49,7 @@ public class Player: MonoBehaviour
             Shield--;
             Player.Instance.ShieldText.text = "Shield: " + Shield.ToString();
             Destroy(other.transform.parent.gameObject);
+            StartCoroutine(FlashPlayer(Color.blue));
          } else {
             HP--;
             HpBar.UpdateHp(HP);
@@ -56,19 +57,30 @@ public class Player: MonoBehaviour
             if(HP <= 0) {
                Die(false);
             }
+            StartCoroutine(FlashPlayer(Color.red));
          }
       } else if(other.transform.tag == "Boss") {
          if(Shield > 0) {
             Shield--;
             Player.Instance.ShieldText.text = "Shield: " + Shield.ToString();
+            StartCoroutine(FlashPlayer(Color.blue));
          } else {
             HP--;
             HpBar.UpdateHp(HP);
             if(HP <= 0) {
                Die(false);
             }
+            StartCoroutine(FlashPlayer(Color.red));
          }
       }
+   }
+   private IEnumerator FlashPlayer(Color colorToFlash) {
+      colorToFlash.r *= 0.7f;
+      colorToFlash.g *= 0.7f;
+      colorToFlash.b *= 0.7f;
+      GetComponent<SpriteRenderer>().color = colorToFlash;
+      yield return new WaitForSeconds(0.2f);
+      GetComponent<SpriteRenderer>().color = Color.white;
    }
    public static void ShieldRefil() {
       Shield = ShieldHP;
