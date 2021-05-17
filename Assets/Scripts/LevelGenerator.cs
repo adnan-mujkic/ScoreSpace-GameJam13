@@ -18,12 +18,14 @@ public class LevelGenerator: MonoBehaviour
    List<GameObject> Grounds;
    BossAi Boss;
    public ElementType SkeletonElement, BossElement;
+   Player player;
 
 
    // Start is called before the first frame update
    void Start() {
       Skeletons = new List<GameObject>();
       Grounds = new List<GameObject>();
+      player = FindObjectOfType<Player>();
    }
 
    public void PrepareWave() {
@@ -62,6 +64,9 @@ public class LevelGenerator: MonoBehaviour
       }
       Boss = Instantiate(BossPrefab);
       Boss.transform.position = new Vector3(Random.Range(-6f, 6f), -6f, 0f);
+      while(CheckIfInPlayerRange(Boss.transform.position.x)){
+         Boss.transform.position = new Vector3(Random.Range(-6f, 6f), -6f, 0f);
+      }
       Boss.ChangeElement(BossElement);
    }
    public void SpawnSkeleton() {
@@ -136,5 +141,8 @@ public class LevelGenerator: MonoBehaviour
          }
       }
       return false;
+   }
+   public bool CheckIfInPlayerRange(float x){
+      return (x - 1f < player.transform.position.x && x + 1f > player.transform.position.x);
    }
 }

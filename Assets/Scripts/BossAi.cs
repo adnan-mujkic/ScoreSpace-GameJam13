@@ -59,7 +59,7 @@ public class BossAi: MonoBehaviour
    }
    public void Die(){
       Debug.Log("Stage Complete");
-      GameManager.GM.Points += 100;
+      GameManager.GM.Points += (100 + (GameManager.GM.Wave * 10));
       GameManager.GM.UpdatePointsText();
       FindObjectOfType<LevelGenerator>().DeleteBoss();
       GameManager.GM.AdvanceToNextStage();
