@@ -37,6 +37,7 @@ public class UpgradePickerWrapper: MonoBehaviour
       if(Player.HP == 10 || GameManager.GM.Points < 20)
          return;
       GameManager.GM.Points -= 20;
+      Player.HP++;
       PointsText.text = GameManager.GM.Points.ToString();
       DisableInteract();
    }
